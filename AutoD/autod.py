@@ -1,6 +1,8 @@
 from tkinter import *
 import json
 from tkinter.ttk import Combobox
+import tkinter as tk
+import tkinter.scrolledtext as st
 from tkinter import messagebox
 
 
@@ -98,8 +100,11 @@ def car_view(model):  # Render selected car data window.
     Label(window, text="Insurance Valid to: " + insu, font=("arial bold", 12)).pack(pady=10, padx=10)
     Label(window, text="Technical Inspection on: " + insp, font=("arial bold", 12)).pack(pady=10, padx=10)
     Label(window, text="Vinete Valid to: " + vine, font=("arial bold", 12)).pack(pady=10, padx=10)
-    Label(window, text="Oil Replacement(km): " + repl, font=("arial bold", 12)).pack(pady=10, padx=10)
-    Label(window, text="Note: " + note, font=("arial bold", 12)).pack(pady=10, padx=10)
+    Label(window, text="Oil Replacement: " + repl, font=("arial bold", 12)).pack(pady=10, padx=10)
+    text_area = st.ScrolledText(window, width=30, height=1)
+    text_area.pack(pady=10, padx=10)
+    text_area.insert(tk.INSERT, note)
+    text_area.configure(state='disabled')
     Button(window, text="Back", command=main_view, font=("arial bold", 10), width=8, height=0)\
         .pack(pady=10, padx=10)
 
@@ -116,7 +121,7 @@ def edit_data_view(model):  # Render Editing data window.
         mod, insu, insp, vine, repl, note = [v for v in models[index].values()]
     clear_view()
     Label(window, text="Model,№: " + mod, font=("arial bold", 12))\
-        .grid(row=0, columnspan=1, pady=10)
+        .grid(row=0, columnspan=2, pady=10)
     Label(window, text="Insurance Valid to:", font=("arial bold", 10)).grid(row=1, column=0, pady=10, sticky="e")
     insurance = Entry(window, width=28, font=("arial bold", 10), bg="pink")
     insurance.grid(row=1, column=1)
@@ -130,7 +135,7 @@ def edit_data_view(model):  # Render Editing data window.
     vinete = Entry(window, width=28, font=("arial bold", 10), bg="pink")
     vinete.grid(row=3, column=1)
     vinete.insert(0, vine)
-    Label(window, text="Oil Replacement(km):", font=("arial bold", 10)).grid(row=4, column=0, pady=10, sticky="e")
+    Label(window, text="Oil Repl(date),to(km):", font=("arial bold", 10)).grid(row=4, column=0, pady=10, sticky="e")
     replacement = Entry(window, width=28, font=("arial bold", 10), bg="pink")
     replacement.grid(row=4, column=1)
     replacement.insert(0, repl)
@@ -168,7 +173,7 @@ def save_data_view():  # Render saving data window.
     vinete = Entry(window, width=30, font=("arial bold", 9))
     vinete.grid(row=3, column=1)
     vinete.insert(0, "Exp.Date")
-    Label(window, text="Oil Replacement(km):", font=("arial bold", 9))\
+    Label(window, text="Oil Repl(date),to(km):", font=("arial bold", 9))\
         .grid(row=4, column=0, padx=5, pady=10, sticky="e")
     replacement = Entry(window, width=30, font=("arial bold", 9))
     replacement.grid(row=4, column=1)
@@ -205,6 +210,7 @@ def main_view():  # Render main menu window.
 
 window = Tk()
 window.geometry("380x350")
+window.resizable(width=False, height=False)
 window.title("Auto Data")
 window.iconbitmap('car.ico')
 car = cars_update()
