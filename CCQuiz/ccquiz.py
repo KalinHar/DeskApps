@@ -1,3 +1,4 @@
+import json
 import continent
 from tkinter import *
 from tkinter import messagebox
@@ -9,12 +10,23 @@ def clear_view():  # Clear window.
         slave.destroy()
 
 
+def hi_scores():
+    pass
+
+
 def reset():  # Reset global value to start new game.
-    global dict_of_game, true_answers, countries, capitals, country, capital
+    global dict_of_game, true_answers, countries, capitals, country, capital, player_name
+    player = {"name": player_name, "score": round(true_answers / len(dict_of_game) * 100, 2),
+              "countries": len(dict_of_game)}
+    with open("scores.txt", "a", newline='\n') as file:
+        file.write(json.dumps(player))
+        file.write('\n')
     dict_of_game = {}
     true_answers = 0
     countries = []
-    capitals = ["Расака", "Манато", "Няма такава Държава", "Има такъв народ", "Тантар"]
+    player_name = ''
+    capitals = ["Русе", "Пловдив", "Барселона", "Ница", "Паница", "Мекица", "Има такава Държава",
+                "Има такъв Народ", "Бай Иван"]
     country = ""
     capital = ""
     start_window()
@@ -25,8 +37,9 @@ def end_of_game():  # End of game and view the result.
     Label(tk, text="Вие познахте :", font=("Courier", 14)).grid(row=0, padx=5, pady=5)
     Label(tk, text=str(true_answers) + " столици от: " + str(len(dict_of_game)) + "  държави,", font=("Courier", 14))\
         .grid(row=1, padx=5, pady=5)
-    Label(tk, text="в този тест!", font=("Courier", 14)).grid(row=2, padx=5, pady=5)
-    Button(tk, text="Нов тест", font=("Courier", 14), command=reset).grid(row=3, padx=5, pady=5)
+    success = f"{true_answers / len(dict_of_game) * 100:.2f}"
+    Label(tk, text=success + " % в този тест!", font=("Courier", 14)).grid(row=2, padx=5, pady=5)
+    Button(tk, text="Нов тест", font=("Courier", 14), command=reset).grid(row=4, padx=5, pady=5)
 
 
 def check_answer(answer):  # Check for true answer.
@@ -75,10 +88,12 @@ def start_game():  # Start game and view main window.
 
 
 def start_window():  # Start window to select a region of the game.
+    pl_name = StringVar()
 
     def add_continent():
-        global countries, capitals, dict_of_game
+        global countries, capitals, dict_of_game, player_name
 
+        player_name = pl_name.get()
         selection = [var1.get(), var2.get(), var3.get(), var4.get(), var5.get()]
         while "No" in selection:
             selection.remove("No")
@@ -131,12 +146,31 @@ def start_window():  # Start window to select a region of the game.
     check_box = Checkbutton(tk, variable=var5, onvalue=region[4], offvalue="No")
     check_box.deselect()
     check_box.grid(row=7, column=0, padx=20, pady=10, sticky="e")
-    Button(tk, text="Начало на Теста", width=15, font=("Courier", 14), command=add_continent).grid(row=8, columnspan=2, pady=5)
+    Label(tk, text="Въведи име:", font=("Courier", 14)).grid(row=8, column=0, padx=20, pady=10)
+
+    Entry(tk, textvariable=pl_name, width=28, font=("Courier", 14)).grid(row=8, column=1, padx=20, pady=10)
+
+    Button(tk, text="Начало на Теста", width=15, font=("Courier", 14), command=add_continent)\
+        .grid(row=9, columnspan=2, pady=5)
+    Label(tk, text="Рейтинг:", font=("Courier", 14)).grid(row=10, columnspan=2, pady=5)
+    listbox = Listbox(tk, height=10, width=60, fg="white", bg="grey", font=("Courier", 10))
+    with open("scores.txt", "r") as file:
+        data = file.readlines()
+        dict_data = {}
+        for ind, line in enumerate(data):
+            dict_data[ind+1] = json.loads(line)
+        count = 0
+        for line in sorted(dict_data.values(), key=lambda x: (- x['score'], - x['countries'])):
+            count += 1
+            listbox.insert(count, f"{line['name']} - {line['score']} % от {line['countries']} държави!")
+        print(dict_data)
+    listbox.grid(row=11, columnspan=2, pady=5)
 
 
 dict_of_game = {}
 true_answers = 0
 countries = []
+player_name = ''
 capitals = ["Русе", "Пловдив", "Барселона", "Ница", "Паница", "Мекица", "Има такава Държава",
             "Има такъв Народ", "Бай Иван"]  # More capitals, for more fun!
 country = ""

@@ -1,0 +1,5 @@
+{"name": "baj Ivan", "score": 42.86, "countries": 14}
+{"name": "baba meca", "score": 97.92, "countries": 48}
+{"name": "jorkata", "score": 94.29, "countries": 35}
+{"name": "jeckie", "score": 88.68, "countries": 53}
+{"name": "Sancho", "score": 60.71, "countries": 56}
