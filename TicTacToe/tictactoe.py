@@ -64,7 +64,7 @@ def check_for_winner():  # Check for winning combination and send it to final vi
         main_desk()
 
 
-def change_button_view(n):  # Changing button selected from player.
+def change_button_view(n):  # Changing button selected from player, whit his mark.
     global button
     if counter % 2 == 0:
         button[n] = pl2m
@@ -89,24 +89,11 @@ def main_desk():  # Rendering main board.
     clear_view()
     global counter
     counter += 1
-    b1 = button_view(1)
-    b1.grid(row=0, column=0)
-    b2 = button_view(2)
-    b2.grid(row=0, column=1)
-    b3 = button_view(3)
-    b3.grid(row=0, column=2)
-    b4 = button_view(4)
-    b4.grid(row=1, column=0)
-    b5 = button_view(5)
-    b5.grid(row=1, column=1)
-    b6 = button_view(6)
-    b6.grid(row=1, column=2)
-    b7 = button_view(7)
-    b7.grid(row=2, column=0)
-    b8 = button_view(8)
-    b8.grid(row=2, column=1)
-    b9 = button_view(9)
-    b9.grid(row=2, column=2)
+    # render 3x3 grid buttons
+    for r in range(3):
+        for c in range(3):
+            button_view(3*r + c + 1).grid(row=r, column=c)
+
     if counter % 2 == 0:
         Label(window, text="Player 2", font=('Verdana', 12)).grid(row=3, columnspan=3)
     else:
@@ -148,7 +135,7 @@ photoX = PhotoImage(file="Xmark.png")
 photoXW = PhotoImage(file="XWmark.png")
 photoN = PhotoImage(file="Nmark.png")
 
-counter = 0
+counter = 0  # Player move counter, used to check who is playing now
 pl1m = ''  # Player 1 mark
 pl2m = ''  # Player 2 mark
 button = {x: x for x in range(1, 10)}  # Generate 9 buttons with different values.
